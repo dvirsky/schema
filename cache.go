@@ -178,7 +178,14 @@ type structInfo struct {
 }
 
 func (i *structInfo) get(alias string) *fieldInfo {
-	return i.fields[alias]
+	ret := i.fields[alias]
+
+	//if the alias as lower case is not a member, try the title case as well (e.g. user -> User)
+	if ret == nil && alias[0] >= 'a' && alias[0] <= 'z' {
+		ret = i.fields[strings.Title(alias)]
+	}
+
+	return ret
 }
 
 type fieldInfo struct {
